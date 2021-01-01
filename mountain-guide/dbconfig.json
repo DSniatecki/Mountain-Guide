@@ -1,0 +1,7 @@
+{
+  "dbname": "mountain_guide",
+  "user": "admin",
+  "password": "admin",
+  "host": "mountain-guide-db",
+  "port": 5432
+}

@@ -1,0 +1,29 @@
+version: "3"
+
+networks:
+  mountain-guide-net:
+services:
+  mountain-guide:
+    container_name: mountain-guide
+    build:
+      context: mountain-guide/.
+    networks:
+      - mountain-guide-net
+    ports:
+      - 8080:8080
+    depends_on:
+      - mountain-guide-db
+  mountain-guide-db:
+    container_name: mountain-guide-db
+    image: postgres:12
+    environment:
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_USER=admin
+      - POSTGRES_DB=mountain_guide
+      - PG_DATA=/var/lib/postgresql/data
+    volumes:
+      - ./data/init-data.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - mountain-guide-net
+    ports:
+      - 5432:5432
