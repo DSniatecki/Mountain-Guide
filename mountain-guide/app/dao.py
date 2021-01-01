@@ -36,13 +36,21 @@ class DataAccessObject:
 
     def __init__(self, db_config_file_path):
         conf = json.loads(read_from_file(db_config_file_path))
-        self.db_connector = psycopg2.connect(
-            database=conf['dbname'],
-            user=conf['user'],
-            password=conf['password'],
-            host=conf['host'],
-            port=conf['port'],
-        )
+        while True:
+            conn = psycopg2.connect(
+                database=conf['dbname'],
+                user=conf['user'],
+                password=conf['password'],
+                host=conf['host'],
+                port=conf['port'],
+            )
+            cur = conn.cursor()
+            try:
+                cur.execute('select 1;')
+            except psycopg2.OperationalError:
+                continue
+            self.db_connector = conn
+            break
         logging.info('Connection to PostgreSQL DB was successfully established')
 
     def find_all_ranges(self) -> List[Range]:
