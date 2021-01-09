@@ -4,11 +4,13 @@ from typing import List
 
 import psycopg2
 import logging
-from queries import RECEIVE_ALL_RANGES, RECEIVE_ALL_SECTIONS
+from queries import RECEIVE_ALL_RANGES, RECEIVE_ALL_SECTIONS, RECEIVE_ALL_PLANNED_TRIPS
 from model.Destination import Destination
 from model.Range import Range
 from model.Section import Section
 from model.Zone import Zone
+from model.PlannedTrip import PlannedTrip
+from model.User import User
 
 
 def execute_read_query(connection, query):
@@ -101,3 +103,4 @@ class DataAccessObject:
             ranges.append(range)
 
         return ranges
+

@@ -24,6 +24,12 @@ def receive_login_page(request: Request):
     return templates.TemplateResponse(name='log-in-page.html', context={'request': request})
 
 
+@app.get('/add-section', response_class=HTMLResponse)
+def receive_add_section_page(request: Request):
+    ranges = dao.find_all_ranges()
+    return templates.TemplateResponse(name='add-section-page.html', context={'request': request, 'ranges': ranges})
+
+
 @app.get('/api/ranges', response_model=List[Range])
 def get_all_ranges() -> List[Range]:
     return dao.find_all_ranges()

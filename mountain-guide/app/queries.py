@@ -16,3 +16,18 @@ FROM ranges range
 RECEIVE_ALL_SECTIONS = """
 SELECT * FROM sections;
 """
+
+RECEIVE_ALL_PLANNED_TRIPS = """
+SELECT  user.id             as user_id
+        user.login          as user_login
+        user.email          as user_email
+        user.password       as user_password
+        user.role           as user_role
+        trip.id             as trip_id,
+        trip.name           as trip_name,
+        section.position    as section_position,
+        section.section_id  as section_id
+FROM Users user
+        JOIN PlannedTrips trip ON user.id = trip.user_id
+        JOIN PlannedSections section ON trip.id = section.planned_trip_id
+"""
