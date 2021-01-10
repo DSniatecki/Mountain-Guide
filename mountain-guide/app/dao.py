@@ -4,7 +4,7 @@ from typing import List
 
 import psycopg2
 import logging
-from queries import RECEIVE_ALL_RANGES, RECEIVE_ALL_SECTIONS, RECEIVE_ALL_PLANNED_TRIPS
+from queries import RECEIVE_ALL_RANGES, RECEIVE_ALL_SECTIONS, RECEIVE_ALL_USERS
 from model.Destination import Destination
 from model.Range import Range
 from model.Section import Section
@@ -104,3 +104,37 @@ class DataAccessObject:
 
         return ranges
 
+    def find_all_users(self) -> List[User]:
+        rows = execute_read_query(self.db_connector, RECEIVE_ALL_USERS)
+        users_map = {}
+        for trip_row in rows:
+            user = User(id=trip_row[0], login=trip_row[1], email=trip_row[2], password=trip_row[3], role=trip_row[4])
+            trip = PlannedTrip(id=trip_row[5], name=trip_row[6])
+
+            temp_user = users_map.get(user)
+            if temp_user is None:
+                users_map[user] = {trip: [(trip_row[7], trip_row[8])]}
+            else:
+                temp_trip = temp_user.get(trip)
+                if temp_trip is None:
+                    users_map[user][trip] = [(trip_row[7], trip_row[8])]
+                else:
+                    temp_trip.append((trip_row[7], trip_row[8]))
+
+        ranges = self.find_all_ranges()
+        section_map = {}
+        for range in ranges:
+            for zone in range.zones:
+                for section in zone.sections:
+                    section_map[section.id] = section
+
+        users = []
+        for user, trips in users_map.items():
+            for trip, planned_sections in trips.items():
+                planned_sections.sort(key=lambda x: x[0])
+                for planned_section in planned_sections:
+                    trip.sections.append(section_map[planned_section[1]])
+                user.plannedTrips.append(trip)
+            users.append(user)
+
+        return users

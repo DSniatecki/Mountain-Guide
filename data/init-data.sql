@@ -87,14 +87,14 @@ VALUES ('Schronisko przy Morskim Oku', 1, 1400.24, true),
        ('Parking przy łące', 1, 921.24, true),
        ('Parking przy Grajdolku', 3, 810.54, true),
        ('Parking pod wodospadem', 2, 995.80, false),
-       ('Stare schronisko', 4, 995.80, true)
-       ('Schronisko w Dolinie Pięciu Stawów Polskich', 1, 1671.10, true),;
+       ('Stare schronisko', 4, 995.80, true),
+       ('Schronisko w Dolinie Pięciu Stawów Polskich', 1, 1671.10, true);
 
 INSERT INTO Sections(name, length, got_points, zone_id, start_destination_id, end_destination_id, is_open, opening_date)
 VALUES ('Z Morskiego Oka do schroniska pod Labedziem.', 3400.24, 3.5, 1, 1, 2, true, '2005-01-01'),
        ('Z parkingu przy łące na Morskie oko.', 2522.24, 2.5, 1, 3, 1, true, '2010-03-01'),
-       ('Z parkingu przy łące na Schronisko pod labedziem.', 7677.24, 9.5, 1, 3, 2, true, '2006-02-01');
-       ('Ze Schroniska pod labedziem do parkingu przy łące.', 7677.24, 9.5, 1, 2, 3, true, '2006-02-01');
+       ('Z parkingu przy łące na Schronisko pod labedziem.', 7677.24, 9.5, 1, 3, 2, true, '2006-02-01'),
+       ('Ze Schroniska pod labedziem do parkingu przy łące.', 7677.24, 9.5, 1, 2, 3, true, '2006-02-01'),
        ('Z Morskiego Oka do Doliny Pięciu Stawów Polskich.', 7677.24, 9.5, 1, 1, 7, true, '2003-07-01');
 
 INSERT INTO Users(login, email, password, role)

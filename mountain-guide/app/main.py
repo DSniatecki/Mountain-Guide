@@ -6,6 +6,8 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
+
+from model.User import User
 from model.Range import Range
 
 app = FastAPI()
@@ -30,9 +32,24 @@ def receive_add_section_page(request: Request):
     return templates.TemplateResponse(name='add-section-page.html', context={'request': request, 'ranges': ranges})
 
 
+@app.get('/planned-trips', response_class=HTMLResponse)
+def receive_planned_trips(request: Request):
+    users = dao.find_all_users()
+    ret_user = users[0]
+    for user in users:
+        if user.id == request.query_params['id']:
+            ret_user = user
+    return templates.TemplateResponse(name='planned-trips-page.html', context={'request': request, 'user': ret_user})
+
+
 @app.get('/api/ranges', response_model=List[Range])
 def get_all_ranges() -> List[Range]:
     return dao.find_all_ranges()
+
+
+@app.get('/api/users', response_model=List[User])
+def get_all_users() -> List[User]:
+    return dao.find_all_users()
 
 
 @app.exception_handler(RequestValidationError)
