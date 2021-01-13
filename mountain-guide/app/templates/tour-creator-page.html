@@ -25,14 +25,23 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
         crossorigin="anonymous"></script>
+
 <nav class="navbar navbar-light bg-success">
     <div class="container-fluid ">
         <a class="navbar-brand text-light" href="/">Przewodnik Górskiego Wędrownika</a>
-        <a class="btn btn-outline-light" href="/">
-            Powrót
-        </a>
+        <div>
+        <span class="mx-2">
+                <span class="navbar-text text-white">Witaj, Kamila!</span>
+            <span class="ms-1 me-2">
+            <img style="border-radius: 10px" width="36px" height="36px"
+                 src="/static/avatar.png"/>            </span>
+            <a class="btn btn-outline-light text-white" href="/">Powrót</a>
+                <a class="btn btn-outline-light text-white" href="/">Wyloguj</a>
+        </span>
+        </div>
     </div>
 </nav>
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-12 col-md-6" style="height: 89vh;overflow-y: scroll;">
@@ -44,18 +53,18 @@
                         <div class="card-body">
                             <h5 class="card-title">
                                 <img width="30px" height="30px"
-                                     src="https://cdn.onlinewebfonts.com/svg/img_567369.png">
+                                     src="/static/section.png">
                                 <span class="p-2"><strong>{{ possibleNextTourSection.name }} </strong></span>
                             </h5>
                             <div style="padding-left: 15%;">
                                 <p>
                                     <img width="30px" height="30px"
-                                         src="https://images.vexels.com/media/users/3/137476/isolated/preview/d89adf16dc6fce8b9abe54aec3af2546-four-peak-mountain-icon-by-vexels.png">
+                                         src="/static/range.png">
                                     <strong class="text-dark"> {{ possibleNextTourSection.rangeName }}</strong>
                                 </p>
                                 <p>
                                     <img width="30px" height="30px"
-                                         src="https://cdn2.iconfinder.com/data/icons/map-pins-and-navigation-solid/32/zone_area_location_map_pin_address_origin_address_chek_point-512.png">
+                                         src="/static/zone.png">
                                     <strong class="text-dark"> {{ possibleNextTourSection.zoneName }}</strong>
                                 </p>
                             </div>
@@ -94,7 +103,7 @@
                         <div class="card-body">
                             <h5 class="card-title">
                                 <img width="30px" height="30px"
-                                     src="https://cdn.onlinewebfonts.com/svg/img_567369.png">
+                                     src="/static/section.png">
                                 <span class="p-2"><strong>{{ currentTourSection.name }} </strong></span>
                             </h5>
                             <div style="padding-left: 15%;">
@@ -114,7 +123,7 @@
                            href="/tour/{{ tourSectionIdsWithoutLast }}"> Usuń ostatni odcinek </a>
                     </div>
                 {% endif %}
-                <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal"
+                <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal"
                         data-bs-target="#staticBackdrop" style="width: 100%;">
                     Zapisz planowaną wycieczkę
                 </button>
@@ -139,11 +148,25 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij
+                            <span>
+                                <a style="width: 100%;" class="btn btn-secondary btn-sm"
+                                   href="/"> Powrót do wszystkich tras </a>
+                            </span>
+                                <span>
+                                <button type="button" class="btn btn-success btn-sm" style="width: 100%;"
+                                        data-bs-dismiss="modal">Kontynuuj
+                                    planowanie wycieczek
                                 </button>
+                                    </span>
                             </div>
+                            <script>
+                                var myModal = new bootstrap.Modal(document.getElementById('staticBackdrop'), {
+                                    keyboard: false
+                                });
+                                myModal.toggle();
+                            </script>
                         {% else %}
-                            <form method="post" action="/....">
+                            <form method="post" action="/save/tour/{{ currentTourSectionIds }}">
                                 <div class="modal-body">
                                     <div class="mb-3">
                                         <label for="name-label" class="form-label">Nazwa:</label>

@@ -6,6 +6,7 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 
 from model.User import User
 from model.Range import Range
@@ -13,6 +14,8 @@ from model.Destination import Destination
 from pydantic import BaseModel
 
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 templates = Jinja2Templates(directory="templates/")
 dao = DataAccessObject('../dbconfig.json')
 
@@ -71,24 +74,23 @@ def receive_main_page(request: Request, raw_sections_ids: str):
 
 @app.post('/save/tour/{raw_sections_ids}', response_class=HTMLResponse)
 def receive_main_page(request: Request, raw_sections_ids: str, tour_name: str = Form('name')):
-    section_ids = [int(raw_sections_ids.split(",")[0])]
+    section_ids = [int(section) for section in raw_sections_ids.split(",")]
     dao.save_tour(tour_name, section_ids)
     current_tour_sections, possible_next_tour_sections = dao.find_tour_sections(section_ids)
-    current_tour = CurrentTour(lengthKM=round((current_tour_sections[0].length / 1000.0), 2),
-                               gotPoints=current_tour_sections[0].gotPoints)
+    current_tour = CurrentTour(lengthKM=0.0, gotPoints=0)
+    for current_tour_section in current_tour_sections:
+        current_tour.lengthKM += (current_tour_section.length / 1000.0)
+        current_tour.gotPoints += current_tour_section.gotPoints
+    current_tour.lengthKM = round(current_tour.lengthKM, 2)
     return templates.TemplateResponse(name='tour-creator-page.html',
                                       context={'request': request,
-                                               'currentTourSections': section_ids,
+                                               'currentTourSections': current_tour_sections,
                                                'possibleNextTourSections': possible_next_tour_sections,
                                                'currentTour': current_tour,
                                                'wasSaved': True,
-                                               'currentTourSectionIds': section_ids[0]
+                                               'currentTourSectionIds': raw_sections_ids,
+                                               'tourSectionIdsWithoutLast': ','.join([str(x) for x in section_ids[:-1]])
                                                })
-
-
-@app.get('/login', response_class=HTMLResponse)
-def receive_login_page(request: Request):
-    return templates.TemplateResponse(name='log-in-page.html', context={'request': request})
 
 
 @app.get('/add-section', response_class=HTMLResponse)

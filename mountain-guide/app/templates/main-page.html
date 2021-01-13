@@ -15,9 +15,15 @@
 <nav class="navbar navbar-light bg-success">
     <div class="container-fluid ">
         <a class="navbar-brand text-light" href="/">Przewodnik Górskiego Wędrownika</a>
-        <a class="btn btn-outline-light" href="/login">
-            Zaloguj się
-        </a>
+        <div>
+        <span class="mx-2">
+                <span class="navbar-text text-white">Witaj, Kamila!</span>
+            <span class="ms-1 me-2">
+            <img style="border-radius: 10px" width="36px" height="36px"
+                 src="/static/avatar.png"/>            </span>
+                <a class="btn btn-outline-light text-white" href="/">Wyloguj</a>
+        </span>
+        </div>
     </div>
 </nav>
 <div class="container-fluid">
@@ -29,8 +35,7 @@
                         <a class="nav-link" href="#range-{{ range.id }}">
                             <div style="border: 1px solid black; border-radius: 5px; padding: 5px; margin-right: 60px;">
                                 <img width="30px" height="30px"
-                                     src="https://images.vexels.com/media/users/3/137476/isolated/preview/d89adf16dc6fce8b9abe54aec3af2546-four-peak-mountain-icon-by-vexels.png">
-                                <strong class="text-dark"> {{ range.name }}</strong>
+                                     src="/static/range.png"/> <strong class="text-dark"> {{ range.name }}</strong>
                             </div>
                         </a>
                         <li class="nav-item">
@@ -40,8 +45,8 @@
                                         <a class="nav-link" href="#zone-{{ zone.id }}">
                                             <div style="border: 1px solid black; border-radius: 5px; padding: 5px; margin-left: 30px; margin-right: 30px; ">
                                                 <img width="30px" height="30px"
-                                                     src="https://cdn2.iconfinder.com/data/icons/map-pins-and-navigation-solid/32/zone_area_location_map_pin_address_origin_address_chek_point-512.png">
-                                                <strong class="text-dark"> {{ zone.name }}</strong>
+                                                     src="/static/zone.png"> <strong
+                                                    class="text-dark"> {{ zone.name }}</strong>
                                             </div>
                                         </a>
                                         <ul class="nav nav-pills flex-column">
@@ -50,9 +55,8 @@
                                                     <a class="nav-link" href="#section-{{ section.id }}">
                                                         <div style="border: 1px solid black; border-radius: 5px; padding: 5px; margin-left: 60px; ">
                                                             <img width="30px" height="30px"
-                                                                 src="https://cdn.onlinewebfonts.com/svg/img_567369.png">
-                                                            <strong
-                                                                    class="text-dark"> {{ section.name }}</strong>
+                                                                 src="/static/section.png"> <strong
+                                                                class="text-dark"> {{ section.name }}</strong>
                                                         </div>
                                                     </a>
                                                 </li>

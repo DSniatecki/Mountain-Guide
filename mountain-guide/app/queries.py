@@ -41,3 +41,14 @@ FROM users myuser
         JOIN plannedtrips trip ON myuser.id = trip.user_id
         JOIN plannedsections section ON trip.id = section.planned_trip_id;
 """
+
+ADD_PLANNED_TOUR = """
+INSERT INTO plannedtrips (name, user_id) VALUES ('{}', {});
+"""
+
+GET_LAST_PLANNED_TOUR_ID = "SELECT currval('plannedtrips_id_seq')"
+
+ADD_PLANNED_TOUR_SECTIONS = """
+INSERT INTO plannedsections(planned_trip_id, position, section_id)
+VALUES {}"""
+

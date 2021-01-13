@@ -4,7 +4,7 @@ from typing import List, Iterable
 import psycopg2
 import logging
 from queries import RECEIVE_ALL_RANGES, RECEIVE_ALL_SECTIONS, RECEIVE_DESTINATION_BY_ID, UPDATE_DESTINATION_BY_ID, \
-    RECEIVE_ALL_USERS
+    RECEIVE_ALL_USERS, ADD_PLANNED_TOUR, GET_LAST_PLANNED_TOUR_ID, ADD_PLANNED_TOUR_SECTIONS
 from model.Destination import Destination
 from model.Range import Range
 from model.Section import Section
@@ -129,9 +129,12 @@ class DataAccessObject:
         execute_query(self.db_connector, update_query)
         return self.find_destination(dest_id)
 
-    def save_tour(self, tour_name: str, section_ids: Iterable[int]):
-
-        return None
+    def save_tour(self, tour_name: str, section_ids: Iterable[int]) -> None:
+        execute_query(self.db_connector, ADD_PLANNED_TOUR.format(tour_name, 1))
+        result = execute_read_query(self.db_connector, GET_LAST_PLANNED_TOUR_ID)
+        tour_id = result[0][0]
+        values = ', '.join([f'({tour_id},{i},{section_id})' for i, section_id in enumerate(section_ids)])
+        execute_query(self.db_connector, ADD_PLANNED_TOUR_SECTIONS.format(values))
 
     def find_all_ranges(self) -> List[Range]:
         rows = execute_read_query(self.db_connector, RECEIVE_ALL_RANGES)
