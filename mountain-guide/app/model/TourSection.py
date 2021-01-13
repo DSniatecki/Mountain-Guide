@@ -4,16 +4,17 @@ from model.Destination import Destination
 from pydantic.main import BaseModel
 
 
-class Section(BaseModel):
+class TourSection(BaseModel):
     id: int
     name: str
-    gotPoints: int
-    length: float
+    country: str
+    rangeName: str
+    zoneName: str
     startDestination: Destination
     endDestination: Destination
+    gotPoints: int
+    length: float
     isOpen: bool
-    openingDate: Optional[date]
-    closureDate: Optional[date]
 
     def __hash__(self) -> int:
         return self.id

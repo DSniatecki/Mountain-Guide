@@ -16,3 +16,13 @@ FROM ranges range
 RECEIVE_ALL_SECTIONS = """
 SELECT * FROM sections;
 """
+
+RECEIVE_DESTINATION_BY_ID = "SELECT * FROM destinations WHERE id = {};"
+
+UPDATE_DESTINATION_BY_ID = """
+UPDATE destinations
+SET name = '{}',
+    height = {},
+    is_open = {}
+WHERE id = {};
+"""

@@ -1,14 +1,29 @@
 import json
 import time
-from typing import List
+from typing import List, Iterable
 
 import psycopg2
 import logging
-from queries import RECEIVE_ALL_RANGES, RECEIVE_ALL_SECTIONS
+from queries import RECEIVE_ALL_RANGES, RECEIVE_ALL_SECTIONS, RECEIVE_DESTINATION_BY_ID, UPDATE_DESTINATION_BY_ID
 from model.Destination import Destination
 from model.Range import Range
 from model.Section import Section
 from model.Zone import Zone
+from model.TourSection import TourSection
+
+
+def execute_query(connection, query):
+    read_start = time.time()
+    cursor = connection.cursor()
+    logging.info(f'Executing query: {query} ...')
+    try:
+        cursor.execute(query)
+        connection.commit()
+        read_time = time.time() - read_start
+        logging.info(f'DB operation completed. Operation time: {round(read_time, 4)} seconds.')
+    except Exception as e:
+        logging.error(f'The error: {e} occurred')
+        raise e
 
 
 def execute_read_query(connection, query):
@@ -24,6 +39,7 @@ def execute_read_query(connection, query):
         return result
     except Exception as e:
         logging.error(f'The error: {e} occurred')
+        connection.commit()
         raise e
 
 
@@ -52,6 +68,60 @@ class DataAccessObject:
             self.db_connector = conn
             break
         logging.info('Connection to PostgreSQL DB was successfully established')
+
+    def find_tour_sections(self, section_ids: Iterable[int]) -> (List[TourSection], List[TourSection]):
+        all_ranges = self.find_all_ranges()
+        possible_next_tour_sections = []
+        tour_sections = []
+        for range in all_ranges:
+            for zone in range.zones:
+                for section in zone.sections:
+                    if section.id in section_ids:
+                        tourSection = TourSection(
+                            id=section.id,
+                            name=section.name,
+                            country=range.country,
+                            rangeName=range.name,
+                            zoneName=zone.name,
+                            startDestination=section.startDestination,
+                            endDestination=section.endDestination,
+                            gotPoints=section.gotPoints,
+                            length=section.length,
+                            isOpen=section.isOpen
+                        )
+                        tour_sections.append(tourSection)
+        last_tour_section = tour_sections[-1]
+        final_destination = last_tour_section.endDestination
+        for range in all_ranges:
+            for zone in range.zones:
+                for section in zone.sections:
+                    if section.startDestination.id == final_destination.id:
+                        tourSection = TourSection(
+                            id=section.id,
+                            name=section.name,
+                            country=range.country,
+                            rangeName=range.name,
+                            zoneName=zone.name,
+                            startDestination=section.startDestination,
+                            endDestination=section.endDestination,
+                            gotPoints=section.gotPoints,
+                            length=section.length,
+                            isOpen=section.isOpen
+                        )
+                        possible_next_tour_sections.append(tourSection)
+
+        return (tour_sections, possible_next_tour_sections)
+
+    def find_destination(self, destination_id: int) -> Destination:
+        query = RECEIVE_DESTINATION_BY_ID.format(destination_id)
+        row = execute_read_query(self.db_connector, query)
+        dest_tup = row[0]
+        return Destination(id=dest_tup[0], name=dest_tup[1], height=dest_tup[3], isOpen=dest_tup[4])
+
+    def update_destination(self, dest_id: int, dest: Destination) -> Destination:
+        update_query = UPDATE_DESTINATION_BY_ID.format(dest.name, dest.height, dest.isOpen, dest_id)
+        execute_query(self.db_connector, update_query)
+        return self.find_destination(dest_id)
 
     def find_all_ranges(self) -> List[Range]:
         rows = execute_read_query(self.db_connector, RECEIVE_ALL_RANGES)

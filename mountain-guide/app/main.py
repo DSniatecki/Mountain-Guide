@@ -1,12 +1,14 @@
 from typing import List
 import uvicorn
 from dao import DataAccessObject
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Form
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 from model.Range import Range
+from model.Destination import Destination
+from pydantic import BaseModel
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates/")
@@ -17,6 +19,50 @@ dao = DataAccessObject('../dbconfig.json')
 def receive_main_page(request: Request):
     ranges = dao.find_all_ranges()
     return templates.TemplateResponse(name='main-page.html', context={'request': request, 'ranges': ranges})
+
+
+@app.get('/destination/{destination_id}', response_class=HTMLResponse)
+def receive_main_page(request: Request, destination_id: int, ):
+    destination = dao.find_destination(destination_id)
+    return templates.TemplateResponse(name='edit-destination-page.html',
+                                      context={'request': request, 'destination': destination})
+
+
+@app.post('/destination/{destination_id}', response_class=HTMLResponse)
+def receive_main_page(request: Request,
+                      destination_id: int,
+                      name: str = Form('name'),
+                      height: float = Form('height'),
+                      isOpen: str = Form('isOpen')):
+    destination_to_update = Destination(id=destination_id, name=name, height=height, isOpen=(isOpen == 'true'))
+    updated_destination = dao.update_destination(destination_id, destination_to_update)
+    return templates.TemplateResponse(name='edit-destination-page.html',
+                                      context={'request': request, 'destination': updated_destination,
+                                               'wasUpdated': True})
+
+
+class CurrentTour(BaseModel):
+    lengthKM: float
+    gotPoints: int
+
+
+@app.get('/tour/{raw_sections_ids}', response_class=HTMLResponse)
+def receive_main_page(request: Request, raw_sections_ids: str):
+    section_ids = [int(section) for section in raw_sections_ids.split(",")]
+    current_tour_sections, possible_next_tour_sections = dao.find_tour_sections(section_ids)
+    current_tour = CurrentTour(lengthKM=0.0, gotPoints=0)
+    for current_tour_section in current_tour_sections:
+        current_tour.lengthKM += (current_tour_section.length / 1000.0)
+        current_tour.gotPoints += current_tour_section.gotPoints
+
+    current_tour.lengthKM = round(current_tour.lengthKM, 2)
+
+    return templates.TemplateResponse(name='tour-creator-page.html',
+                                      context={'request': request,
+                                               'currentTourSections': current_tour_sections,
+                                               'possibleNextTourSections': possible_next_tour_sections,
+                                               'currentTour': current_tour
+                                               })
 
 
 @app.get('/login', response_class=HTMLResponse)

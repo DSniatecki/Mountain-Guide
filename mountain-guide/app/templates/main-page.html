@@ -76,26 +76,33 @@
                             <hr/>
                             <h4 style="text-align: center;" id="section-{{ section.id }}">{{ section.name }}</h4>
                             <hr/>
-                            <p><strong>Pasmo górskie:</strong> {{ range.name }}</p>
-                            <p><strong>Kraj:</strong> {{ range.country }}</p>
-                            <p><strong>Strefa:</strong> {{ zone.name }}</p>
-                            <p><strong>Długość:</strong> {{ section.length }} m</p>
-                            <p><strong>Punkty GOT:</strong> {{ section.gotPoints }}</p>
-                            <p><strong>Destynacja początkowa:</strong><a class="text-decoration-none"
-                                                                         data-bs-toggle="collapse"
-                                                                         href="#section-{{ section.id }}-destination-{{ section.startDestination.id }}"
-                                                                         role="button" aria-expanded="false"
-                                                                         aria-controls="section-{{ section.id }}-destination-{{ section.startDestination.id }}">
-                                {{ section.startDestination.name }}
-                            </a>
-                                <div class="collapse"
-                                     id="section-{{ section.id }}-destination-{{ section.startDestination.id }}">
-                                    <div class="card card-body">
-                            <p><strong>Wysokość:</strong> {{ section.startDestination.height }}</p>
-                            <p><strong>Jest otwarta:</strong> {{ section.startDestination.isOpen }}</p>
+                            <div class="px-2">
+                                <p><strong>Pasmo górskie:</strong> {{ range.name }}</p>
+                                <p><strong>Kraj:</strong> {{ range.country }}</p>
+                                <p><strong>Strefa:</strong> {{ zone.name }}</p>
+                                <p><strong>Długość:</strong> {{ section.length }} m</p>
+                                <p><strong>Punkty GOT:</strong> {{ section.gotPoints }}</p>
+                                <p><strong>Destynacja początkowa:</strong><a
+                                        class="text-decoration-none text-success fw-bold"
+                                        data-bs-toggle="collapse"
+                                        href="#section-{{ section.id }}-destination-{{ section.startDestination.id }}"
+                                        role="button" aria-expanded="false"
+                                        aria-controls="section-{{ section.id }}-destination-{{ section.startDestination.id }}">
+                                    {{ section.startDestination.name }}
+                                </a>
+                                    <div class="collapse"
+                                         id="section-{{ section.id }}-destination-{{ section.startDestination.id }}">
+                                        <div class="card card-body">
+                                <p><strong>Nazwa:</strong> {{ section.startDestination.name }}</p>
+                                <p><strong>Wysokość:</strong> {{ section.startDestination.height }} m n.p.m.</p>
+                                <p><strong>Jest otwarta:</strong>
+                                    {% if section.startDestination.isOpen %} Tak {% else %} Nie {% endif %}
+                                </p>
+                                <a class="btn btn-success btn-sm"
+                                   href="/destination/{{ section.startDestination.id }}">Modyfikuj</a>
                             </div>
                             </div>
-                            <p><strong>Destynacja końcowa:</strong><a class="text-decoration-none"
+                            <p><strong>Destynacja końcowa:</strong><a class="text-decoration-none text-success fw-bold"
                                                                       data-bs-toggle="collapse"
                                                                       href="#section-{{ section.id }}-destination-{{ section.endDestination.id }}"
                                                                       role="button" aria-expanded="false"
@@ -105,11 +112,23 @@
                                 <div class="collapse"
                                      id="section-{{ section.id }}-destination-{{ section.endDestination.id }}">
                                     <div class="card card-body">
-                            <p><strong>Wysokość:</strong> {{ section.endDestination.height }}</p>
-                            <p><strong>Jest otwarta:</strong> {{ section.endDestination.isOpen }}</p>
+                            <p><strong>Nazwa:</strong> {{ section.endDestination.name }}</p>
+                            <p><strong>Wysokość:</strong> {{ section.endDestination.height }} m n.p.m.</p>
+                            <p><strong>Jest otwarta:</strong>
+                                {% if section.endDestination.isOpen %} Tak {% else %} Nie {% endif %}
+                            </p>
+                            <a class="btn btn-success btn-sm"
+                               href="/destination/{{ section.endDestination.id }}">Modyfikuj</a>
                             </div>
                             </div>
-                            <p><strong>Jest otwarty:</strong> {{ section.isOpen }}</p>
+                            <p><strong>Jest otwarty:</strong>
+                                {% if section.isOpen %} Tak {% else %} Nie {% endif %}
+                            </p>
+                            <div class="mx-3">
+                                <a style="width: 100%;" class="btn btn-dark btn-sm"
+                                   href="/tour/{{ section.id }}"> Rozpocznij tworzenie wycieczki </a>
+                            </div>
+                            </div>
                         {% endfor %}
                     {% endfor %}
                 {% endfor %}
@@ -119,7 +138,7 @@
 </div>
 <footer class="text-sm-start bg-success p-1">
     <div class="text-center p-1">
-        <a class="text-light" href="#">Przewodnik Górskiego Wędrownika - © 2020</a>
+        <a class="text-light" href="/">Przewodnik Górskiego Wędrownika - © 2020</a>
     </div>
 </footer>
 </body>
