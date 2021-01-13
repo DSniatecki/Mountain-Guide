@@ -1,10 +1,9 @@
-from datetime import date
-from typing import Optional
-from model.Destination import Destination
 from pydantic.main import BaseModel
 
+from .Destination import Destination
 
-class TourSection(BaseModel):
+
+class TripSection(BaseModel):
     id: int
     name: str
     country: str
@@ -14,7 +13,7 @@ class TourSection(BaseModel):
     endDestination: Destination
     gotPoints: int
     length: float
-    isOpen: bool
+    isOpen: bool = True
 
     def __hash__(self) -> int:
         return self.id

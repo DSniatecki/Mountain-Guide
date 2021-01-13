@@ -1,7 +1,8 @@
 from datetime import date
 from typing import Optional
-from model.Destination import Destination
 from pydantic.main import BaseModel
+
+from .Destination import Destination
 
 
 class Section(BaseModel):
@@ -11,7 +12,7 @@ class Section(BaseModel):
     length: float
     startDestination: Destination
     endDestination: Destination
-    isOpen: bool
+    isOpen: bool = True
     openingDate: Optional[date]
     closureDate: Optional[date]
 

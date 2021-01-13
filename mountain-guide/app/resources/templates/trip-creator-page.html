@@ -45,27 +45,27 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-12 col-md-6" style="height: 89vh;overflow-y: scroll;">
-            {% if possibleNextTourSections|length > 0 %}
-                {% for possibleNextTourSection in possibleNextTourSections %}
+            {% if tripBuildingStage.possibleNextSections|length > 0 %}
+                {% for possibleNextTripSection in tripBuildingStage.possibleNextSections %}
                     <div class="card m-4 super-card"
-                         onclick="location.href='/tour/{{ currentTourSectionIds }},{{ possibleNextTourSection.id }}'"
+                         onclick="location.href='/trip/{{ currentTripSectionIds }},{{ possibleNextTripSection.id }}'"
                     >
                         <div class="card-body">
                             <h5 class="card-title">
                                 <img width="30px" height="30px"
                                      src="/static/section.png">
-                                <span class="p-2"><strong>{{ possibleNextTourSection.name }} </strong></span>
+                                <span class="p-2"><strong>{{ possibleNextTripSection.name }} </strong></span>
                             </h5>
                             <div style="padding-left: 15%;">
                                 <p>
                                     <img width="30px" height="30px"
                                          src="/static/range.png">
-                                    <strong class="text-dark"> {{ possibleNextTourSection.rangeName }}</strong>
+                                    <strong class="text-dark"> {{ possibleNextTripSection.rangeName }}</strong>
                                 </p>
                                 <p>
                                     <img width="30px" height="30px"
                                          src="/static/zone.png">
-                                    <strong class="text-dark"> {{ possibleNextTourSection.zoneName }}</strong>
+                                    <strong class="text-dark"> {{ possibleNextTripSection.zoneName }}</strong>
                                 </p>
                             </div>
                         </div>
@@ -89,38 +89,38 @@
                 <div class="container mx-4 pb-2 pt-1">
                     <div class="row">
                         <div class="col-sm text-center">
-                            <strong>Punkty GOT: </strong> {{ currentTour.gotPoints }}
+                            <strong>Punkty GOT: </strong> {{ tripBuildingStage.totalGotPoints }}
                         </div>
                         <div class="col-sm text-center">
-                            <strong>Długość: </strong> {{ currentTour.lengthKM }} KM
+                            <strong>Długość: </strong> {{ tripBuildingStage.totalLengthKM }} KM
                         </div>
                     </div>
                 </div>
             </div>
-            <div style="height: 68vh;overflow-y: scroll;">
-                {% for currentTourSection in currentTourSections %}
+            <div style="height: 66vh;overflow-y: scroll;">
+                {% for currentTripSection in tripBuildingStage.sections %}
                     <div class="card mx-2 mb-4">
                         <div class="card-body">
                             <h5 class="card-title">
                                 <img width="30px" height="30px"
                                      src="/static/section.png">
-                                <span class="p-2"><strong>{{ currentTourSection.name }} </strong></span>
+                                <span class="p-2"><strong>{{ currentTripSection.name }} </strong></span>
                             </h5>
                             <div style="padding-left: 15%;">
-                                <p>Początek: {{ currentTourSection.startDestination.name }}</p>
-                                <p>Koniec: {{ currentTourSection.endDestination.name }} </p>
-                                <p>Długość: {{ currentTourSection.length }} </p>
-                                <p>Punkty GOT: {{ currentTourSection.gotPoints }} </p>
+                                <p>Początek: {{ currentTripSection.startDestination.name }}</p>
+                                <p>Koniec: {{ currentTripSection.endDestination.name }} </p>
+                                <p>Długość: {{ currentTripSection.length }} </p>
+                                <p>Punkty GOT: {{ currentTripSection.gotPoints }} </p>
                             </div>
                         </div>
                     </div>
                 {% endfor %}
             </div>
             <div class="mx-2 p-2 pt-3">
-                {% if currentTourSections|length > 1 %}
+                {% if tripBuildingStage.sections|length > 1 %}
                     <div class="pb-2">
                         <a style="width: 100%;" class="btn btn-outline-danger btn-sm"
-                           href="/tour/{{ tourSectionIdsWithoutLast }}"> Usuń ostatni odcinek </a>
+                           href="/trip/{{ tripSectionIdsWithoutLast }}"> Usuń ostatni odcinek </a>
                     </div>
                 {% endif %}
                 <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal"
@@ -153,10 +153,8 @@
                                    href="/"> Powrót do wszystkich tras </a>
                             </span>
                                 <span>
-                                <button type="button" class="btn btn-success btn-sm" style="width: 100%;"
-                                        data-bs-dismiss="modal">Kontynuuj
-                                    planowanie wycieczek
-                                </button>
+                                <a style="width: 100%;" class="btn btn-success btn-sm"
+                                   href="/trip/{{ currentTripSectionIds }}"> Kontynuuj planowanie wycieczek </a>
                                     </span>
                             </div>
                             <script>
@@ -166,11 +164,11 @@
                                 myModal.toggle();
                             </script>
                         {% else %}
-                            <form method="post" action="/save/tour/{{ currentTourSectionIds }}">
+                            <form method="post" action="/save/trip/{{ currentTripSectionIds }}">
                                 <div class="modal-body">
                                     <div class="mb-3">
                                         <label for="name-label" class="form-label">Nazwa:</label>
-                                        <input name="name" minlength="1" maxlength="80" type="text"
+                                        <input name="trip_name" minlength="1" maxlength="80" type="text"
                                                class="form-control"
                                                id="name-label" required>
                                     </div>

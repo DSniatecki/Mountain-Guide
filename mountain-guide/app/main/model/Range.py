@@ -1,6 +1,7 @@
 from typing import List
-from model.Zone import Zone
 from pydantic.main import BaseModel
+
+from .Zone import Zone
 
 
 class Range(BaseModel):

@@ -28,7 +28,7 @@
 </nav>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-12 col-md-6">
+        <div class="col-sm-12 col-md-6" style="max-height: 90vh;overflow-y: scroll; padding-bottom: 12px;">
             <nav id="myScrollspy">
                 <ul class="nav nav-pills flex-column">
                     {% for range in ranges %}
@@ -130,7 +130,7 @@
                             </p>
                             <div class="mx-3">
                                 <a style="width: 100%;" class="btn btn-dark btn-sm"
-                                   href="/tour/{{ section.id }}"> Rozpocznij tworzenie wycieczki </a>
+                                   href="/trip/{{ section.id }}"> Rozpocznij tworzenie wycieczki </a>
                             </div>
                             </div>
                         {% endfor %}

@@ -1,6 +1,7 @@
 from typing import List
-from model.PlannedTrip import PlannedTrip
 from pydantic.main import BaseModel
+
+from .PlannedTrip import PlannedTrip
 
 
 class User(BaseModel):

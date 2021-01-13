@@ -1,8 +1,9 @@
 from typing import List
-from model.Destination import Destination
-from model.Section import Section
 
 from pydantic.main import BaseModel
+
+from .Destination import Destination
+from .Section import Section
 
 
 class Zone(BaseModel):

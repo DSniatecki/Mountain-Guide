@@ -72,14 +72,29 @@ CREATE TABLE PlannedSections
 
 INSERT INTO Ranges(NAME, COUNTRY)
 VALUES ('Tatry', 'Polska'),
-       ('Sudety', 'Polska');
+       ('Sudety', 'Polska'),
+       ('Sudety1', 'Polska'),
+       ('Sudety2', 'Polska'),
+       ('Sudety3', 'Polska'),
+       ('Sudety4', 'Polska'),
+       ('Sudety5', 'Polska'),
+       ('Sudety7', 'Polska'),
+       ('Sudety6', 'Polska'),
+       ('Sudety8', 'Polska'),
+       ('Sudety9', 'Polska');
+
 
 INSERT INTO Zones(name, range_id)
 VALUES ('Tatry Wysokie', 1),
        ('Tatry Nizinne', 1),
        ('Tatry Niskie', 1),
        ('Sudety wysokie', 2),
-       ('Sudety niskie', 2);
+       ('Sudety niskie', 2),
+       ('Sudety niskie', 3),
+       ('Sudety niskie', 4),
+       ('Sudety niskie', 5),
+       ('Sudety niskie', 6),
+       ('Sudety niskie', 7);
 
 INSERT INTO Destinations(name, zone_id, height, is_open)
 VALUES ('Schronisko przy Morskim Oku', 1, 1400.24, true),
@@ -88,15 +103,26 @@ VALUES ('Schronisko przy Morskim Oku', 1, 1400.24, true),
        ('Parking przy Grajdolku', 3, 810.54, true),
        ('Parking pod wodospadem', 2, 995.80, false),
        ('Stare schronisko', 4, 995.80, true),
-       ('Schronisko w Dolinie Pięciu Stawów Polskich', 1, 1671.10, true);
+       ('Schronisko w Dolinie Pięciu Stawów Polskich', 1, 1671.10, true),
+       ('Parking1', 5, 921.24, true),
+       ('Parking1', 6, 921.24, true),
+       ('Parking1', 7, 921.24, true),
+       ('Parking1', 8, 921.24, true),
+       ('Parking1', 9, 921.24, true),
+       ('Parking1', 10, 921.24, true);
 
 INSERT INTO Sections(name, length, got_points, zone_id, start_destination_id, end_destination_id, is_open, opening_date)
 
 VALUES ('Z Morskiego Oka do schroniska pod Labedziem.', 3400.24, 3.5, 1, 1, 2, true, '2005-01-01'),
        ('Z parkingu przy łące na Morskie oko.', 2522.24, 2.5, 1, 3, 1, true, '2010-03-01'),
-       ('Z parkingu przy łące na Schronisko pod labedziem.', 7677.24, 9.5, 1, 3, 2, true, '2006-02-01'),
-       ('Ze Schroniska pod labedziem do parkingu przy łące.', 7677.24, 9.5, 1, 2, 3, true, '2006-02-01'),
-       ('Z Morskiego Oka do Doliny Pięciu Stawów Polskich.', 7677.24, 9.5, 1, 1, 7, true, '2003-07-01');
+       ('Z parkingu przy łące na Schronisko pod labedziem.', 7677.24, 9, 1, 3, 2, true, '2006-02-01'),
+       ('Ze Schroniska pod labedziem do parkingu przy łące.', 7677.24, 9, 1, 2, 3, true, '2006-02-01'),
+       ('Ze Schroniska pod labedziem do parkingu przy łące22.', 7677.24, 9, 1, 2, 3, true, '2006-02-01'),
+       ('Ze Schroniska pod labedziem do parkingu przy łące33.', 7677.24, 9, 1, 2, 3, true, '2006-02-01'),
+       ('Ze Schroniska pod labedziem do parkingu przy łące44.', 7677.24, 9, 1, 2, 3, true, '2006-02-01'),
+       ('Ze Schroniska pod labedziem do parkingu przy łące55.', 7677.24, 9, 1, 2, 3, true, '2006-02-01'),
+       ('Ze Schroniska pod labedziem do parkingu przy łące55.', 7677.24, 9, 1, 2, 3, true, '2006-02-01'),
+       ('Z Morskiego Oka do Doliny Pięciu Stawów Polskich.', 7677.24, 9, 1, 1, 7, true, '2003-07-01');
 
 INSERT INTO Users(login, email, password, role)
 VALUES ('adam123', 'great_email@gmail.com', '21b72c0b7adc5c7b4a50ffcb90d92dd6', 'użytkownik'),

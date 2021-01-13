@@ -1,11 +1,13 @@
+from typing import List
 from pydantic.main import BaseModel
 
+from .Section import Section
 
-class Destination(BaseModel):
+
+class PlannedTrip(BaseModel):
     id: int
     name: str
-    height: float
-    isOpen: bool
+    sections: List[Section] = []
 
     def __hash__(self) -> int:
         return self.id
