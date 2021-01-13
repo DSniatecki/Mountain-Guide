@@ -26,3 +26,18 @@ SET name = '{}',
     is_open = {}
 WHERE id = {};
 """
+
+RECEIVE_ALL_USERS = """
+SELECT  myuser.id             as user_id,
+        myuser.login          as user_login,
+        myuser.email          as user_email,
+        myuser.password       as user_password,
+        myuser.role           as user_role,
+        trip.id             as trip_id,
+        trip.name           as trip_name,
+        section.position    as section_position,
+        section.section_id  as section_id
+FROM users myuser
+        JOIN plannedtrips trip ON myuser.id = trip.user_id
+        JOIN plannedsections section ON trip.id = section.planned_trip_id;
+"""

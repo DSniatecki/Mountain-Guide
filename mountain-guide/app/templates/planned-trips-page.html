@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Przewodnik Górski</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+</head>
+<body data-spy="scroll" data-target="#myScrollspy" data-offset="20">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+        crossorigin="anonymous"></script>
+<nav class="navbar navbar-light bg-success">
+    <div class="container-fluid ">
+        <a class="navbar-brand text-light" href="/">Przewodnik Górskiego Wędrownika</a>
+        <div class="d-flex gap-2 justify-content-end">
+            <div class="d-flex align-items-center text-light"> Witaj, {{ user.login }} </div>
+            <a class="btn btn-outline-light" href="/">
+            Wyloguj się
+            </a>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12 col-md-6">
+            <h3 class="text-dark">Twoje zaplanowane Wycieczki</h3>
+            <nav id="myScrollspy">
+                <ul class="nav nav-pills flex-column">
+                    {% for trip in user.plannedTrips %}
+                        <a class="nav-link" href="#trip-{{ trip.id }}">
+                            <div style="border: 1px solid black; border-radius: 5px; padding: 5px; margin-right: 60px;">
+                                <strong class="text-dark"> {{ trip.name }}</strong>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </ul>
+            </nav>
+        </div>
+        <div class="col-sm-12 col-md-6" style="max-height: 90vh;overflow-y: scroll;">
+            <div data-spy="scroll" data-target="#myScrollspy" data-offset="10">
+                {% for trip in user.plannedTrips %}
+                    <a id="trip-{{ trip.id }}"></a>
+                    <hr/>
+                    <h4 style="text-align: center;" >{{ trip.name }}</h4>
+                    <hr/>
+                    <p><strong>Destynacja początkowa:</strong> {{ trip.name }}</p>
+                    <p><strong>Destynacja końcowa:</strong> {{ trip.name }}</p>
+                    <p><strong>Punkty GOT:</strong>{{ trip.name }}</p>
+                    <p><strong>Długość:</strong> {{ trip.name }} m</p>
+                    <hr/>
+                <div data-spy="scroll" data-target="#myScrollspy" data-offset="10">
+                    {% for section in trip.sections %}
+                            <ul class="nav nav-pills flex-column">
+                                <li class="nav-item">
+                                    <div style="border: 1px solid black; border-radius: 5px; padding: 5px; margin-left: 60px; ">
+                                        <img width="30px" height="30px"
+                                             src="https://cdn.onlinewebfonts.com/svg/img_567369.png">
+                                        <strong class="text-dark"> {{ section.name }}</strong>
+                                        <br>
+                                        <div class="container-fluid">
+                                            <div class="row">
+                                                <div class="col-sm-4">Początek: </div>
+                                                <div class="col-sm-8"> {{ section.startDestination.name }} </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-4">Koniec: </div>
+                                                <div class="col-sm-8"> {{ section.endDestination.name }} </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-4">Długość: </div>
+                                                <div class="col-sm-8"> {{ section.length }} km </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-4">Punkty GOT: </div>
+                                                <div class="col-sm-8"> {{ section.gotPoints }} </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+            <div class="d-flex p-2 justify-content-md-end">
+                <a class="btn btn-primary" href="/" role="button">Anuluj</a>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="text-sm-start bg-success p-1">
+    <div class="text-center p-1">
+        <a class="text-light" href="#">Przewodnik Górskiego Wędrownika - © 2020</a>
+    </div>
+</footer>
+</body>
+</html>

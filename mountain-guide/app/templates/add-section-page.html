@@ -30,14 +30,32 @@
                     <div class="container">
                         <p>Destynacja początkowa:</p>
                         <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                            <select class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                <option selected>Wybierz</option>
+                                {% for range in ranges %}
+                                    {% for zone in range.zones %}
+                                        {% for destination in zone.destinations %}
+                                            <option value= "{{ destination.id }}">{{ destination.name }}</option>
+                                        {% endfor %}
+                                    {% endfor %}
+                                {% endfor %}
+                            </select>
                           <button class="btn btn-primary" type="button">Dodaj</button>
-                          <button class="btn btn-primary" type="button">Wybierz</button>
                         </div>
                         <br>
                         <p>Destynacja końcowa:</p>
                         <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                          <select class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                <option selected>Wybierz</option>
+                                {% for range in ranges %}
+                                    {% for zone in range.zones %}
+                                        {% for destination in zone.destinations %}
+                                            <option value= "{{ destination.id }}">{{ destination.name }}</option>
+                                        {% endfor %}
+                                    {% endfor %}
+                                {% endfor %}
+                            </select>
                           <button class="btn btn-primary" type="button">Dodaj</button>
-                          <button class="btn btn-primary" type="button">Wybierz</button>
                         </div>
                     </div>
 
