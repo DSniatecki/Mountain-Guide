@@ -61,7 +61,26 @@ def receive_main_page(request: Request, raw_sections_ids: str):
                                       context={'request': request,
                                                'currentTourSections': current_tour_sections,
                                                'possibleNextTourSections': possible_next_tour_sections,
-                                               'currentTour': current_tour
+                                               'currentTour': current_tour,
+                                               'currentTourSectionIds': raw_sections_ids,
+                                               'tourSectionIdsWithoutLast': ','.join([str(x) for x in section_ids[:-1]])
+                                               })
+
+
+@app.post('/save/tour/{raw_sections_ids}', response_class=HTMLResponse)
+def receive_main_page(request: Request, raw_sections_ids: str, tour_name: str = Form('name')):
+    section_ids = [int(raw_sections_ids.split(",")[0])]
+    dao.save_tour(tour_name, section_ids)
+    current_tour_sections, possible_next_tour_sections = dao.find_tour_sections(section_ids)
+    current_tour = CurrentTour(lengthKM=round((current_tour_sections[0].length / 1000.0), 2),
+                               gotPoints=current_tour_sections[0].gotPoints)
+    return templates.TemplateResponse(name='tour-creator-page.html',
+                                      context={'request': request,
+                                               'currentTourSections': section_ids,
+                                               'possibleNextTourSections': possible_next_tour_sections,
+                                               'currentTour': current_tour,
+                                               'wasSaved': True,
+                                               'currentTourSectionIds': section_ids[0]
                                                })
 
 

@@ -7,6 +7,19 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 
+    <style>
+        .super-card {
+            cursor: pointer;
+        }
+
+        .super-card:hover {
+            border: 2px solid green;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        }
+
+
+    </style>
+
 </head>
 <body data-spy="scroll" data-target="#myScrollspy" data-offset="20">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
@@ -22,12 +35,12 @@
 </nav>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-12 col-md-6">
-
-
-            {% if possibleNextTourSections|length > 1 %}
+        <div class="col-sm-12 col-md-6" style="height: 89vh;overflow-y: scroll;">
+            {% if possibleNextTourSections|length > 0 %}
                 {% for possibleNextTourSection in possibleNextTourSections %}
-                    <div class="card m-4">
+                    <div class="card m-4 super-card"
+                         onclick="location.href='/tour/{{ currentTourSectionIds }},{{ possibleNextTourSection.id }}'"
+                    >
                         <div class="card-body">
                             <h5 class="card-title">
                                 <img width="30px" height="30px"
@@ -57,38 +70,98 @@
                 </div>
             {% endif %}
         </div>
-        <div class="col-sm-12 col-md-6" style="max-height: 90vh;overflow-y: scroll;">
-
-            <header class="text-center mt-2">
-                <h3><strong>Planowanie Wycieczki</strong></h3>
-            </header>
-            <div class="card mx-2">
-                <div class="card-body mx-4 px-2">
-                    <p><strong>Punkty GOT: </strong> {{ currentTour.gotPoints }} </p>
-                    <p><strong>Długość: </strong> {{ currentTour.lengthKM }} KM </p>
+        <div class="col-sm-12 col-md-6">
+            <div class="card mx-2 m-2">
+                <div class="text-center">
+                    <h4 class="card-title pt-1">
+                        <strong>Planowanie Wycieczki</strong>
+                    </h4>
                 </div>
-            </div>
-            <header class="text-center m-2">
-                <h3><strong>Odcinki</strong></h3>
-            </header>
-            {% for currentTourSection in currentTourSections %}
-                <div class="card mx-2 mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <img width="30px" height="30px"
-                                 src="https://cdn.onlinewebfonts.com/svg/img_567369.png">
-                            <span class="p-2"><strong>{{ currentTourSection.name }} </strong></span>
-                        </h5>
-                        <div style="padding-left: 15%;">
-                            <p>Początek: {{ currentTourSection.startDestination.name }}</p>
-                            <p>Koniec: {{ currentTourSection.endDestination.name }} </p>
-                            <p>Długość: {{ currentTourSection.length }} </p>
-                            <p>Punkty GOT: {{ currentTourSection.gotPoints }} </p>
+                <div class="container mx-4 pb-2 pt-1">
+                    <div class="row">
+                        <div class="col-sm text-center">
+                            <strong>Punkty GOT: </strong> {{ currentTour.gotPoints }}
+                        </div>
+                        <div class="col-sm text-center">
+                            <strong>Długość: </strong> {{ currentTour.lengthKM }} KM
                         </div>
                     </div>
                 </div>
-            {% endfor %}
-
+            </div>
+            <div style="height: 68vh;overflow-y: scroll;">
+                {% for currentTourSection in currentTourSections %}
+                    <div class="card mx-2 mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <img width="30px" height="30px"
+                                     src="https://cdn.onlinewebfonts.com/svg/img_567369.png">
+                                <span class="p-2"><strong>{{ currentTourSection.name }} </strong></span>
+                            </h5>
+                            <div style="padding-left: 15%;">
+                                <p>Początek: {{ currentTourSection.startDestination.name }}</p>
+                                <p>Koniec: {{ currentTourSection.endDestination.name }} </p>
+                                <p>Długość: {{ currentTourSection.length }} </p>
+                                <p>Punkty GOT: {{ currentTourSection.gotPoints }} </p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="mx-2 p-2 pt-3">
+                {% if currentTourSections|length > 1 %}
+                    <div class="pb-2">
+                        <a style="width: 100%;" class="btn btn-outline-danger btn-sm"
+                           href="/tour/{{ tourSectionIdsWithoutLast }}"> Usuń ostatni odcinek </a>
+                    </div>
+                {% endif %}
+                <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal"
+                        data-bs-target="#staticBackdrop" style="width: 100%;">
+                    Zapisz planowaną wycieczkę
+                </button>
+            </div>
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
+                 tabindex="-1"
+                 aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Zapisywanie wycieczki</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                        </div>
+                        {% if wasSaved %}
+                            <div class="modal-body">
+                                <div id="successAlert"
+                                     class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <strong>Sukces! </strong> Wycieczka została zapisana.
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                            aria-label="Close"></button>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij
+                                </button>
+                            </div>
+                        {% else %}
+                            <form method="post" action="/....">
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="name-label" class="form-label">Nazwa:</label>
+                                        <input name="name" minlength="1" maxlength="80" type="text"
+                                               class="form-control"
+                                               id="name-label" required>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij
+                                    </button>
+                                    <button type="submit" class="btn btn-success">Zapisz</button>
+                                </div>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

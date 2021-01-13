@@ -72,7 +72,7 @@ class DataAccessObject:
     def find_tour_sections(self, section_ids: Iterable[int]) -> (List[TourSection], List[TourSection]):
         all_ranges = self.find_all_ranges()
         possible_next_tour_sections = []
-        tour_sections = []
+        tour_sections = {}
         for range in all_ranges:
             for zone in range.zones:
                 for section in zone.sections:
@@ -89,8 +89,12 @@ class DataAccessObject:
                             length=section.length,
                             isOpen=section.isOpen
                         )
-                        tour_sections.append(tourSection)
-        last_tour_section = tour_sections[-1]
+                        tour_sections[section.id] = tourSection
+        all_tour_sections = []
+        for section_id in section_ids:
+            all_tour_sections.append(tour_sections[section_id])
+
+        last_tour_section = all_tour_sections[-1]
         final_destination = last_tour_section.endDestination
         for range in all_ranges:
             for zone in range.zones:
@@ -110,7 +114,7 @@ class DataAccessObject:
                         )
                         possible_next_tour_sections.append(tourSection)
 
-        return (tour_sections, possible_next_tour_sections)
+        return (all_tour_sections, possible_next_tour_sections)
 
     def find_destination(self, destination_id: int) -> Destination:
         query = RECEIVE_DESTINATION_BY_ID.format(destination_id)
@@ -122,6 +126,13 @@ class DataAccessObject:
         update_query = UPDATE_DESTINATION_BY_ID.format(dest.name, dest.height, dest.isOpen, dest_id)
         execute_query(self.db_connector, update_query)
         return self.find_destination(dest_id)
+
+    def save_tour(self, tour_name: str, section_ids: Iterable[int]):
+
+
+
+
+        return None
 
     def find_all_ranges(self) -> List[Range]:
         rows = execute_read_query(self.db_connector, RECEIVE_ALL_RANGES)
@@ -171,3 +182,7 @@ class DataAccessObject:
             ranges.append(range)
 
         return ranges
+
+
+# dao = DataAccessObject('../dbconfig.json')
+# dao.find_tour_sections([1])

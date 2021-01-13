@@ -65,5 +65,6 @@ VALUES ('Schronisko przy Morskim Oku', 1, 1400.24, true),
 
 INSERT INTO Sections(name, length, got_points, zone_id, start_destination_id, end_destination_id, is_open, opening_date)
 VALUES ('Z Morskiego Oku dla schroniska pod Labedziem.', 3400.24, 3, 1, 1, 2, true, '2005-01-01'),
+       ('Ze schroniska pod Labedziem na parking przy lace', 6300.24, 8, 1, 2, 3, true, '2008-01-01'),
        ('Z parkingu przy łące na Morskie oko.', 2522.24, 2, 1, 3, 1, true, '2010-03-01'),
        ('Z parkingu przy łące na Schronisko pod labedziem.', 7677.24, 9, 1, 3, 2, true, '2006-02-01');
