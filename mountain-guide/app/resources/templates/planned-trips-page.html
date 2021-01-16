@@ -15,24 +15,38 @@
 <nav class="navbar navbar-light bg-success">
     <div class="container-fluid ">
         <a class="navbar-brand text-light" href="/">Przewodnik Górskiego Wędrownika</a>
-        <div class="d-flex gap-2 justify-content-end">
-            <div class="d-flex align-items-center text-light"> Witaj, {{ user.login }} </div>
-            <a class="btn btn-outline-light" href="/">
-            Wyloguj się
-            </a>
+        <div>
+        <span class="mx-2">
+                <span class="navbar-text text-white">Witaj, Kamila!</span>
+            <span class="ms-1 me-2">
+            <img style="border-radius: 10px" width="36px" height="36px"
+                 src="/static/avatar.png"/>            </span>
+                <a class="btn btn-outline-light text-white" href="/">Wyloguj</a>
+        </span>
         </div>
     </div>
 </nav>
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-12 col-md-6">
-            <h3 class="text-dark">Twoje zaplanowane Wycieczki</h3>
+            <h2 class="text-dark">Twoje zaplanowane Wycieczki</h2>
+            <form method="post" action="/planned-trips">
+                <div class="input-group mb-3">
+                    <input name="pattern" type="text" class="form-control" placeholder="Wyszukaj wycieczkę" aria-label="Wyszukaj wycieczkę">
+                    <button class="btn btn-success" type="submit">
+                        <img width="24px" height="24px" src="/static/search.png">
+                    </button>
+                </div>
+            </form>
             <nav id="myScrollspy">
                 <ul class="nav nav-pills flex-column">
-                    {% for trip in user.plannedTrips %}
+                    {% for trip in trips %}
                         <a class="nav-link" href="#trip-{{ trip.id }}">
-                            <div style="border: 1px solid black; border-radius: 5px; padding: 5px; margin-right: 60px;">
-                                <strong class="text-dark"> {{ trip.name }}</strong>
+                            <div>
+                                <p class="text-dark fw-normal"> {{ trip.name }}</p>
+                                <p style="padding-left:2em" class="text-muted fw-normal">
+                                    Od: {{ trip_data[trip][0] }} Do: {{ trip_data[trip][1] }} </p>
+                                <hr/>
                             </div>
                         </a>
                     {% endfor %}
@@ -41,52 +55,49 @@
         </div>
         <div class="col-sm-12 col-md-6" style="max-height: 90vh;overflow-y: scroll;">
             <div data-spy="scroll" data-target="#myScrollspy" data-offset="10">
-                {% for trip in user.plannedTrips %}
+                {% for trip in trips %}
                     <a id="trip-{{ trip.id }}"></a>
                     <hr/>
                     <h4 style="text-align: center;" >{{ trip.name }}</h4>
                     <hr/>
-                    <p><strong>Destynacja początkowa:</strong> {{ trip.name }}</p>
-                    <p><strong>Destynacja końcowa:</strong> {{ trip.name }}</p>
-                    <p><strong>Punkty GOT:</strong>{{ trip.name }}</p>
-                    <p><strong>Długość:</strong> {{ trip.name }} m</p>
+                    <p><strong>Destynacja początkowa:</strong> {{ trip_data[trip][0] }}</p>
+                    <p><strong>Destynacja końcowa:</strong> {{ trip_data[trip][1] }}</p>
+                    <p><strong>Punkty GOT:</strong> {{ trip_data[trip][2] }}</p>
+                    <p><strong>Długość:</strong> {{ trip_data[trip][3] }} m</p>
                     <hr/>
                 <div data-spy="scroll" data-target="#myScrollspy" data-offset="10">
                     {% for section in trip.sections %}
-                            <ul class="nav nav-pills flex-column">
-                                <li class="nav-item">
-                                    <div style="border: 1px solid black; border-radius: 5px; padding: 5px; margin-left: 60px; ">
-                                        <img width="30px" height="30px"
-                                             src="https://cdn.onlinewebfonts.com/svg/img_567369.png">
-                                        <strong class="text-dark"> {{ section.name }}</strong>
-                                        <br>
-                                        <div class="container-fluid">
-                                            <div class="row">
-                                                <div class="col-sm-4">Początek: </div>
-                                                <div class="col-sm-8"> {{ section.startDestination.name }} </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-sm-4">Koniec: </div>
-                                                <div class="col-sm-8"> {{ section.endDestination.name }} </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-sm-4">Długość: </div>
-                                                <div class="col-sm-8"> {{ section.length }} km </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-sm-4">Punkty GOT: </div>
-                                                <div class="col-sm-8"> {{ section.gotPoints }} </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
+                        <div style="border: 1px solid black; border-radius: 5px; padding: 5px; margin-left: 60px; ">
+                            <img width="30px" height="30px"
+                                 src="https://cdn.onlinewebfonts.com/svg/img_567369.png">
+                            <strong class="text-dark"> {{ section.name }}</strong>
+                            <br>
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-sm-4">Początek: </div>
+                                    <div class="col-sm-8"> {{ section.startDestination.name }} </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-4">Koniec: </div>
+                                    <div class="col-sm-8"> {{ section.endDestination.name }} </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-4">Długość: </div>
+                                    <div class="col-sm-8"> {{ section.length }} km </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-4">Punkty GOT: </div>
+                                    <div class="col-sm-8"> {{ section.gotPoints }} </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
                     {% endfor %}
                 </div>
                 {% endfor %}
             </div>
             <div class="d-flex p-2 justify-content-md-end">
-                <a class="btn btn-primary" href="/" role="button">Anuluj</a>
+                <a class="btn btn-success" href="/" role="button">Anuluj</a>
             </div>
         </div>
     </div>

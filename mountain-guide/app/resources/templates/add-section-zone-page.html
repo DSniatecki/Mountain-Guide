@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Przewodnik Górski</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+</head>
+<body data-spy="scroll" data-target="#myScrollspy" data-offset="20">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+        crossorigin="anonymous"></script>
+<nav class="navbar navbar-light bg-success">
+    <div class="container-fluid ">
+        <a class="navbar-brand text-light" href="/">Przewodnik Górskiego Wędrownika</a>
+        <a class="btn btn-outline-light" href="/">
+            Powrót
+        </a>
+    </div>
+</nav>
+<div class="container-fluid">
+    <div style="max-width: 600px; margin: 125px auto 275px; border: 1px solid #a8a8a8; border-radius: 5px; padding-top: 15px;">
+        <h4 class="d-flex justify-content-center">Dodawanie odcinka</h4>
+        <hr/>
+        <div class="d-flex justify-content-center" style="padding: 25px 50px;">
+            <form method="post" action="/add-section">
+                <div class="mb-3">
+                    <p>Wybierz strefę, do której chcesz dodać odcinek:</p>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <select name="zone_id" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                            <option selected>Wybierz</option>
+                                {% for zone in zones %}
+                                    <option value= "{{ zone.id }}">{{ zone.name }}</option>
+                                {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-success">Wybierz</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<footer class="text-sm-start bg-success p-1">
+    <div class="text-center p-1">
+        <a class="text-light" href="#">Przewodnik Górskiego Wędrownika - © 2020</a>
+    </div>
+</footer>
+</body>
+</html>

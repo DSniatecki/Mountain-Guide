@@ -17,6 +17,7 @@ services_factory = ServicesFactory(DbExecutor(db_config))
 ranges_service = services_factory.create_ranges_service()
 trips_service = services_factory.create_trips_service()
 destinations_service = services_factory.create_destinations_service()
+sections_service = services_factory.create_sections_service()
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="../resources/images/"), name="static")
@@ -75,20 +76,38 @@ def receive_main_page(request: Request, raw_sections_ids: str, trip_name: str = 
 
 
 @app.get('/add-section', response_class=HTMLResponse)
-def receive_add_section_page(request: Request):
-    ranges = ranges_service.find_all_ranges()
-    return templates.TemplateResponse(name='add-section-page.html', context={'request': request, 'ranges': ranges})
+def receive_add_section_zone_page(request: Request):
+    zones = ranges_service.find_all_zones()
+    context = {'request': request, 'zones': zones}
+    return templates.TemplateResponse(name='add-section-zone-page.html', context=context)
 
 
-# @app.get('/planned-trips', response_class=HTMLResponse)
-# def receive_planned_trips(request: Request):
-# TODO - Ustaliliśmy, że jeden user więc raczej to jest już niepotrzebne
-# users = ranges_dao.find_all_users()
-# ret_user = users[0]
-# for user in users:
-#     if user.id == request.query_params['id']:
-#         ret_user = user
-# return templates.TemplateResponse(name='planned-trips-page.html', context={'request': request, 'user': ret_user})
+@app.post('/add-section', response_class=HTMLResponse)
+def receive_add_section_page(request: Request,
+                             zone_id: int = Form('zone_id')):
+    # TODO obsługa dodawania
+    zone = sections_service.find_zone_with_sections(zone_id)
+    context = {'request': request, 'zone': zone}
+    return templates.TemplateResponse(name='add-section-page.html', context=context)
+
+
+@app.get('/planned-trips', response_class=HTMLResponse)
+def receive_planned_trips(request: Request):
+    trips = trips_service.find_all_trips()
+    trips_data = trips_service.get_all_trips_data(trips)
+    context = {'request': request, 'trips': trips, 'trip_data': trips_data}
+    return templates.TemplateResponse(name='planned-trips-page.html', context=context)
+
+
+@app.post('/planned-trips', response_class=HTMLResponse)
+def receive_searched_planned_trips(request: Request,
+                                   pattern: str = Form('pattern')):
+    # TODO co jak nie ma pasujących wycieczek
+    trips = trips_service.find_matching_trips(pattern)
+    trips_data = trips_service.get_all_trips_data(trips)
+    context = {'request': request, 'trips': trips, 'trip_data': trips_data}
+    return templates.TemplateResponse(name='planned-trips-page.html', context=context)
+
 
 @app.exception_handler(404)
 def custom_http_exception_handler(request, exc):

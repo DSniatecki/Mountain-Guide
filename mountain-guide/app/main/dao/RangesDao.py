@@ -12,6 +12,11 @@ FROM ranges r
          JOIN destinations d on z.id = d.zone_id;
 """
 
+RECEIVE_ALL_ZONES = """
+SELECT z.id, z.name
+FROM zones z;
+"""
+
 
 def _create_range_from_range_row(range_row):
     return Range(id=range_row[0], name=range_row[1], country=range_row[2])
@@ -93,3 +98,19 @@ class RangesDao:
                     zone.destinations.append(destination)
             ranges.append(range)
         return ranges
+
+    def make_sections_map(self):
+        ranges = self.find_all_ranges()
+        section_map = {}
+        for range in ranges:
+            for zone in range.zones:
+                for section in zone.sections:
+                    section_map[section.id] = section
+        return section_map
+
+    def find_all_zones(self):
+        zones_r = self.db_executor.execute_read_query(RECEIVE_ALL_ZONES)
+        zones = []
+        for zone_row in zones_r:
+            zones.append(Zone(id=zone_row[0], name=zone_row[1]))
+        return zones

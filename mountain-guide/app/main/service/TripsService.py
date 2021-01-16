@@ -1,9 +1,11 @@
 from typing import List, Iterable
 from dao.RangesDao import RangesDao
 from dao.TripsDao import TripsDao
+from model.Destination import Destination
 from model.Range import Range
 from model.Section import Section
 from model.Zone import Zone
+from model.PlannedTrip import PlannedTrip
 from model.TripSection import TripSection
 from model.TripBuildingStage import TripBuildingStage
 
@@ -65,4 +67,40 @@ class TripsService:
                         if section.startDestination.id == final_destination.id:
                             trip_section = create_trip_section(range, section, zone)
                             possible_next_trip_sections.append(trip_section)
-        return (all_trips_sections, possible_next_trip_sections)
+        return all_trips_sections, possible_next_trip_sections
+
+    def find_all_trips(self) -> List[PlannedTrip]:
+        trip_sections = self.trips_dao.find_all_planned_trips()
+        section_map = self.ranges_dao.make_sections_map()
+        trips = []
+        for trip, planned_sections in trip_sections.items():
+            planned_sections.sort(key=lambda x: x[0])
+            for planned_section in planned_sections:
+                trip.sections.append(section_map[planned_section[1]])
+            trips.append(trip)
+        return trips
+
+    def get_all_trips_data(self, trips) -> {PlannedTrip: (Destination, Destination, int, float)}:
+        data = {}
+        for trip in trips:
+            data[trip] = self._get_trip_data(trip)
+        return data
+
+    def _get_trip_data(self, plannedtrip) -> (Destination, Destination, int, float):
+        length = 0
+        gotpoints = 0
+        for section in plannedtrip.sections:
+            length += section.length
+            gotpoints += section.gotPoints
+        return plannedtrip.sections[0].startDestination.name, plannedtrip.sections[
+            -1].endDestination.name, gotpoints, length
+
+    def find_matching_trips(self, search_pattern) -> List[PlannedTrip]:
+        trips = self.find_all_trips()
+        if len(search_pattern) == 0:
+            return trips
+        matching_trips = []
+        for trip in trips:
+            if trip.name.lower().find(search_pattern.lower()) != -1:
+                matching_trips.append(trip)
+        return matching_trips
