@@ -93,14 +93,14 @@ class TripsService:
             length += section.length
             gotpoints += section.gotPoints
         return plannedtrip.sections[0].startDestination.name, plannedtrip.sections[
-            -1].endDestination.name, gotpoints, length
+            -1].endDestination.name, gotpoints, round(length, 2)
 
-    def find_matching_trips(self, search_pattern) -> List[PlannedTrip]:
+    def find_matching_trips(self, search_pattern) -> (List[PlannedTrip], bool):
         trips = self.find_all_trips()
-        if len(search_pattern) == 0:
-            return trips
+        if type(search_pattern) != str or len(search_pattern) == 0:
+            return trips, True
         matching_trips = []
         for trip in trips:
             if trip.name.lower().find(search_pattern.lower()) != -1:
                 matching_trips.append(trip)
-        return matching_trips
+        return matching_trips, False

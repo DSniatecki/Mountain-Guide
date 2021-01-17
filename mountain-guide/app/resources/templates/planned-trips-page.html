@@ -6,7 +6,13 @@
     <title>Przewodnik Górski</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
-
+    <script>
+        function removeAlert() {
+            if (document.getElementById("successAlert")) {
+                setTimeout(() => document.getElementById("successAlert").remove(), 4000)
+            }
+        }
+    </script>
 </head>
 <body data-spy="scroll" data-target="#myScrollspy" data-offset="20">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
@@ -37,6 +43,13 @@
                         <img width="24px" height="24px" src="/static/search.png">
                     </button>
                 </div>
+                {% if search_unsuccessful %}
+                    <div id="successAlert"
+                         class="alert alert-danger alert-dismissible fade show" role="alert">
+                        Nie znaleziono wycieczek pasujących do wpisanej frazy
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
             </form>
             <nav id="myScrollspy">
                 <ul class="nav nav-pills flex-column">
@@ -63,7 +76,7 @@
                     <p><strong>Destynacja początkowa:</strong> {{ trip_data[trip][0] }}</p>
                     <p><strong>Destynacja końcowa:</strong> {{ trip_data[trip][1] }}</p>
                     <p><strong>Punkty GOT:</strong> {{ trip_data[trip][2] }}</p>
-                    <p><strong>Długość:</strong> {{ trip_data[trip][3] }} m</p>
+                    <p><strong>Długość:</strong> {{ trip_data[trip][3] }} km</p>
                     <hr/>
                 <div data-spy="scroll" data-target="#myScrollspy" data-offset="10">
                     {% for section in trip.sections %}
@@ -96,9 +109,9 @@
                 </div>
                 {% endfor %}
             </div>
-            <div class="d-flex p-2 justify-content-md-end">
-                <a class="btn btn-success" href="/" role="button">Anuluj</a>
-            </div>
+        </div>
+        <div class="d-flex p-2 justify-content-md-end">
+            <a class="btn btn-success" href="/" role="button">Anuluj</a>
         </div>
     </div>
 </div>

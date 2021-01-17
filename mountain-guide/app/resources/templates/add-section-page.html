@@ -6,7 +6,13 @@
     <title>Przewodnik Górski</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
-
+    <script>
+        function removeAlert() {
+            if (document.getElementById("successAlert")) {
+                setTimeout(() => document.getElementById("successAlert").remove(), 4000)
+            }
+        }
+    </script>
 </head>
 <body data-spy="scroll" data-target="#myScrollspy" data-offset="20">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
@@ -22,84 +28,82 @@
 </nav>
 <div class="container-fluid">
     <div style="max-width: 1200px; margin: 125px auto 275px; border: 1px solid #a8a8a8; border-radius: 5px; padding-top: 15px;">
-        <h4 class="d-flex justify-content-center">Dodawanie odcinka</h4>
+        <h4 class="d-flex justify-content-center">Dodawanie odcinka do strefy {{ zone.name }}</h4>
         <hr/>
-        <form>
+        <form method="post" action="/add-section/{{ zone.id }}">
+            {% if wasCreated %}
+                <div id="successAlert"
+                     class="alert alert-success alert-dismissible fade show" role="alert">
+                    <div class="d-flex justify-content-center"><strong>Sukces! </strong> Odcinek został poprawnie dodany.</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif %}
             <div class="row">
                 <div class="col-sm-4" >
                     <div class="container">
                         <p>Destynacja początkowa:</p>
                         <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                            <select class="form-select form-select-sm" aria-label=".form-select-sm example">
+                            <select name="startDestination"  class="form-select form-select-sm" aria-label=".form-select-sm example">
                                 <option selected>Wybierz</option>
-                                {% for range in ranges %}
-                                    {% for zone in range.zones %}
-                                        {% for destination in zone.destinations %}
-                                            <option value= "{{ destination.id }}">{{ destination.name }}</option>
-                                        {% endfor %}
-                                    {% endfor %}
+                                {% for destination in zone.destinations %}
+                                    <option value="{{ destination.id }}">{{ destination.name }}</option>
                                 {% endfor %}
                             </select>
-                          <button class="btn btn-primary" type="button">Dodaj</button>
+                          <button class="btn btn-success" type="button">Dodaj</button>
                         </div>
                         <br>
                         <p>Destynacja końcowa:</p>
                         <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                          <select class="form-select form-select-sm" aria-label=".form-select-sm example">
+                            <select name="endDestination" class="form-select form-select-sm" aria-label=".form-select-sm example">
                                 <option selected>Wybierz</option>
-                                {% for range in ranges %}
-                                    {% for zone in range.zones %}
-                                        {% for destination in zone.destinations %}
-                                            <option value= "{{ destination.id }}">{{ destination.name }}</option>
-                                        {% endfor %}
+                                    {% for destination in zone.destinations %}
+                                        <option value="{{ destination.id }}">{{ destination.name }}</option>
                                     {% endfor %}
-                                {% endfor %}
                             </select>
-                          <button class="btn btn-primary" type="button">Dodaj</button>
+                          <button class="btn btn-success" type="button">Dodaj</button>
                         </div>
                     </div>
-
                 </div>
                 <div class="col-sm-4">
                     <div class="mb-3">
-                        <label for="exampleInputName" class="form-label">Nazwa:</label>
-                        <input type="text" class="form-control" id="exampleInputName">
+                        <label for="inputName" class="form-label">Nazwa:</label>
+                        <input name="name" type="text" class="form-control" id="inputName" required>
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputPoints" class="form-label">Punkty GOT:</label>
-                        <input type="number" class="form-control" id="exampleInputPoints" min="0">
+                        <label for="inputPoints" class="form-label">Punkty GOT:</label>
+                        <input name="gotPoints" type="number" class="form-control" id="inputPoints" min="0" required>
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputLength" class="form-label">Długość (km):</label>
-                        <input type="number" class="form-control" id="exampleInputLength" min="0">
+                        <label for="inputLength" class="form-label">Długość (km):</label>
+                        <input name="length" type="number" class="form-control" id="inputLength" min="0" step="0.01" required>
                     </div>
                 </div>
                 <div class="col-sm-4">
                     <div class="container">
                         <div class="mb-3">
-                            <label for="exampleInputActive" class="form-label">Czy otwarta:</label>
-                            <div id="exampleInputActive" class="d-grid gap-2 d-md-flex justify-content-md-evenly" >
+                            <label for="isOpenGroup" class="form-label">Czy otwarta:</label>
+                            <div id="isOpenGroup" class="d-grid gap-2 d-md-flex justify-content-md-evenly" >
                                 <div>
-                                    <input class="form-check-input" type="radio" id="exampleInputActiveTrue" name="exampleActive">
-                                    <label for="exampleInputActiveTrue">Tak</label>
+                                    <input name="isOpen" class="form-check-input" type="radio" id="isOpenTrue" value="true" required>
+                                    <label for="isOpenTrue">Tak</label>
                                 </div>
                                 <div>
-                                    <input class="form-check-input" type="radio" id="exampleInputActiveFalse" name="exampleActive">
-                                    <label for="exampleInputActiveFalse">Nie</label>
+                                    <input name="isOpen" class="form-check-input" type="radio" id="isOpenFalse" value="false" required>
+                                    <label for="isOpenFalse">Nie</label>
                                 </div>
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label for="exampleInputOpeningDate" class="form-label">Data otwarcia:</label>
-                            <input type="date" class="form-control" id="exampleInputOpeningDate">
+                            <label for="openingDate" class="form-label">Data otwarcia:</label>
+                            <input name="openingDate" type="date" class="form-control" id="openingDate">
                         </div>
                         <div class="mb-3">
-                            <label for="exampleInputClosingDate" class="form-label">Data zamknięcia:</label>
-                            <input type="date" class="form-control" id="exampleInputClosingDate">
+                            <label for="closingDate" class="form-label">Data zamknięcia:</label>
+                            <input name="closingDate" type="date" class="form-control" id="closingDate">
                         </div>
                         <br>
                         <div class="d-flex flex-column mb-3">
-                            <button type="submit" class="btn btn-primary">Dodaj</button>
+                            <button type="submit" class="btn btn-success">Dodaj</button>
                         </div>
                     </div>
                 </div>

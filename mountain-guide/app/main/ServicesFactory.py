@@ -1,9 +1,11 @@
 from dao.DestinationsDao import DestinationsDao
 from dao.RangesDao import RangesDao
 from dao.TripsDao import TripsDao
+from dao.SectionsDao import SectionsDao
 from service.DestinationsService import DestinationsService
 from service.RangesService import RangesService
 from service.TripsService import TripsService
+from service.SectionsService import SectionsService
 
 
 class ServicesFactory:
@@ -13,9 +15,11 @@ class ServicesFactory:
         self._ranges_dao = None
         self._trips_dao = None
         self._destinations_dao = None
+        self._sections_dao = None
         self._ranges_service = None
         self._trips_service = None
         self._destinations_service = None
+        self._sections_service = None
 
     def create_ranges_service(self) -> RangesService:
         if self._ranges_service is None:
@@ -32,6 +36,12 @@ class ServicesFactory:
             self._destinations_service = DestinationsService(self._create_destinations_dao())
         return self._destinations_service
 
+    def create_sections_service(self) -> SectionsService:
+        if self._sections_service is None:
+            self._sections_service = SectionsService(self._create_sections_dao(), self._create_destinations_dao(),
+                                                     self._create_ranges_dao())
+        return self._sections_service
+
     def _create_ranges_dao(self) -> RangesDao:
         if self._ranges_dao is None:
             self._ranges_dao = RangesDao(self._db_executor)
@@ -46,3 +56,8 @@ class ServicesFactory:
         if self._destinations_dao is None:
             self._destinations_dao = DestinationsDao(self._db_executor)
         return self._destinations_dao
+
+    def _create_sections_dao(self) -> SectionsDao:
+        if self._sections_dao is None:
+            self._sections_dao = SectionsDao(self._db_executor)
+        return self._sections_dao

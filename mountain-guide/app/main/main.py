@@ -1,6 +1,8 @@
 import json
 
 import uvicorn
+from datetime import date
+from typing import Optional
 from dao.DbExecutor import DbExecutor
 from fastapi import FastAPI, Request, Form, HTTPException
 from fastapi.encoders import jsonable_encoder
@@ -84,10 +86,31 @@ def receive_add_section_zone_page(request: Request):
 
 @app.post('/add-section', response_class=HTMLResponse)
 def receive_add_section_page(request: Request,
-                             zone_id: int = Form('zone_id')):
-    # TODO obsługa dodawania
+                             zone_id: int = Form("zone_id")):
     zone = sections_service.find_zone_with_sections(zone_id)
     context = {'request': request, 'zone': zone}
+    return templates.TemplateResponse(name='add-section-page.html', context=context)
+
+
+@app.post('/add-section/{zone_id}', response_class=HTMLResponse)
+def receive_add_section_page(request: Request,
+                             zone_id: int,
+                             startDestination: int = Form('startDestination'),
+                             endDestination: int = Form('endDestination'),
+                             name: str = Form('name'),
+                             gotPoints: int = Form('gotPoints'),
+                             length: float = Form('length'),
+                             isOpen: str = Form('isOpen'),
+                             openingDate: Optional[date] = Form('openingDate'),
+                             closingDate: Optional[date] = Form('closingDate')):
+    # TODO destynacje nie podane, nazwa not unique
+    zone = sections_service.add_section({'name': name, 'got_points': int(gotPoints), 'length': length,
+                                         'start_destination': int(startDestination),
+                                         'end_destination': int(endDestination),
+                                         'is_open': isOpen, 'opening_date': openingDate,
+                                         'closing_date': closingDate},
+                                        zone_id)
+    context = {'request': request, 'zone': zone, 'wasCreated': True}
     return templates.TemplateResponse(name='add-section-page.html', context=context)
 
 
@@ -102,10 +125,9 @@ def receive_planned_trips(request: Request):
 @app.post('/planned-trips', response_class=HTMLResponse)
 def receive_searched_planned_trips(request: Request,
                                    pattern: str = Form('pattern')):
-    # TODO co jak nie ma pasujących wycieczek
-    trips = trips_service.find_matching_trips(pattern)
+    trips, search_unsuccessful = trips_service.find_matching_trips(pattern)
     trips_data = trips_service.get_all_trips_data(trips)
-    context = {'request': request, 'trips': trips, 'trip_data': trips_data}
+    context = {'request': request, 'trips': trips, 'trip_data': trips_data, 'search_unsuccessful': search_unsuccessful}
     return templates.TemplateResponse(name='planned-trips-page.html', context=context)
 
 
