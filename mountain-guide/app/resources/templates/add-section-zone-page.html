@@ -29,8 +29,8 @@
                 <div class="mb-3">
                     <p>Wybierz strefę, do której chcesz dodać odcinek:</p>
                     <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                        <select name="zone_id" class="form-select form-select-sm" aria-label=".form-select-sm example">
-                            <option selected>Wybierz</option>
+                        <select name="zone_id" class="form-select form-select-sm" aria-label=".form-select-sm example" required>
+                            <option value="-1" selected>Wybierz</option>
                                 {% for zone in zones %}
                                     <option value= "{{ zone.id }}">{{ zone.name }}</option>
                                 {% endfor %}

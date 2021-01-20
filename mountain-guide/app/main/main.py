@@ -103,14 +103,13 @@ def receive_add_section_page(request: Request,
                              isOpen: str = Form('isOpen'),
                              openingDate: Optional[date] = Form('openingDate'),
                              closingDate: Optional[date] = Form('closingDate')):
-    # TODO destynacje nie podane, nazwa not unique
-    zone = sections_service.add_section({'name': name, 'got_points': int(gotPoints), 'length': length,
-                                         'start_destination': int(startDestination),
-                                         'end_destination': int(endDestination),
-                                         'is_open': isOpen, 'opening_date': openingDate,
-                                         'closing_date': closingDate},
-                                        zone_id)
-    context = {'request': request, 'zone': zone, 'wasCreated': True}
+    zone, success = sections_service.add_section({'name': name, 'got_points': int(gotPoints), 'length': length,
+                                                  'start_destination': int(startDestination),
+                                                  'end_destination': int(endDestination),
+                                                  'is_open': isOpen, 'opening_date': openingDate,
+                                                  'closing_date': closingDate},
+                                                 zone_id)
+    context = {'request': request, 'zone': zone, 'wasCreated': success}
     return templates.TemplateResponse(name='add-section-page.html', context=context)
 
 

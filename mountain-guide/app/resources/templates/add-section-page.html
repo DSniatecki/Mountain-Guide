@@ -11,6 +11,9 @@
             if (document.getElementById("successAlert")) {
                 setTimeout(() => document.getElementById("successAlert").remove(), 4000)
             }
+            if (document.getElementById("failureAlert")) {
+                setTimeout(() => document.getElementById("failureAlert").remove(), 4000)
+            }
         }
     </script>
 </head>
@@ -31,20 +34,34 @@
         <h4 class="d-flex justify-content-center">Dodawanie odcinka do strefy {{ zone.name }}</h4>
         <hr/>
         <form method="post" action="/add-section/{{ zone.id }}">
-            {% if wasCreated %}
+            {% if wasCreated == true %}
                 <div id="successAlert"
                      class="alert alert-success alert-dismissible fade show" role="alert">
-                    <div class="d-flex justify-content-center"><strong>Sukces! </strong> Odcinek został poprawnie dodany.</div>
+                    <div class="d-flex justify-content-center"><strong>Sukces!</strong></div>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <div class="d-flex justify-content-center">Odcinek został poprawnie dodany.</div>
                 </div>
+            {% elif wasCreated == false %}
+                <div id="failureAlert"
+                     class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <div class="d-flex justify-content-center">
+                        <strong>Niepowodzenie!</strong>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <div class="d-flex justify-content-center">
+                        Dodawanie odcinka nie powiodło się. Upewnij się, że wybrano destynacje początkową
+                        i końcową, a nazwa odcinka jest unikalna w wybranej strefie.
+                    </div>
+                </div>
+
             {% endif %}
             <div class="row">
                 <div class="col-sm-4" >
                     <div class="container">
                         <p>Destynacja początkowa:</p>
                         <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                            <select name="startDestination"  class="form-select form-select-sm" aria-label=".form-select-sm example">
-                                <option selected>Wybierz</option>
+                            <select name="startDestination"  class="form-select form-select-sm" aria-label=".form-select-sm example" required>
+                                <option value="-1" selected>Wybierz</option>
                                 {% for destination in zone.destinations %}
                                     <option value="{{ destination.id }}">{{ destination.name }}</option>
                                 {% endfor %}
@@ -54,8 +71,8 @@
                         <br>
                         <p>Destynacja końcowa:</p>
                         <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                            <select name="endDestination" class="form-select form-select-sm" aria-label=".form-select-sm example">
-                                <option selected>Wybierz</option>
+                            <select name="endDestination" class="form-select form-select-sm" aria-label=".form-select-sm example" required>
+                                <option value="-1" selected>Wybierz</option>
                                     {% for destination in zone.destinations %}
                                         <option value="{{ destination.id }}">{{ destination.name }}</option>
                                     {% endfor %}
