@@ -124,9 +124,9 @@ def receive_planned_trips(request: Request):
 @app.post('/planned-trips', response_class=HTMLResponse)
 def receive_searched_planned_trips(request: Request,
                                    pattern: str = Form('pattern')):
-    trips, search_unsuccessful = trips_service.find_matching_trips(pattern)
+    trips = trips_service.find_matching_trips(pattern)
     trips_data = trips_service.get_all_trips_data(trips)
-    context = {'request': request, 'trips': trips, 'trip_data': trips_data, 'search_unsuccessful': search_unsuccessful}
+    context = {'request': request, 'trips': trips, 'trip_data': trips_data}
     return templates.TemplateResponse(name='planned-trips-page.html', context=context)
 
 

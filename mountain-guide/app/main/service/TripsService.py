@@ -98,9 +98,9 @@ class TripsService:
     def find_matching_trips(self, search_pattern) -> (List[PlannedTrip], bool):
         trips = self.find_all_trips()
         if type(search_pattern) != str or len(search_pattern) == 0:
-            return trips, True
+            return trips
         matching_trips = []
         for trip in trips:
             if trip.name.lower().find(search_pattern.lower()) != -1:
                 matching_trips.append(trip)
-        return matching_trips, False
+        return matching_trips
