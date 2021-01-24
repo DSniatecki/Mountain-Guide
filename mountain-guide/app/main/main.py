@@ -87,9 +87,14 @@ def receive_add_section_zone_page(request: Request):
 @app.post('/add-section', response_class=HTMLResponse)
 def receive_add_section_page(request: Request,
                              zone_id: int = Form("zone_id")):
-    zone = sections_service.find_zone_with_sections(zone_id)
-    context = {'request': request, 'zone': zone}
-    return templates.TemplateResponse(name='add-section-page.html', context=context)
+    if zone_id == -1:
+        zones = ranges_service.find_all_zones()
+        context = {'request': request, 'zones': zones}
+        return templates.TemplateResponse(name='add-section-zone-page.html', context=context)
+    else:
+        zone = sections_service.find_zone_with_sections(zone_id)
+        context = {'request': request, 'zone': zone}
+        return templates.TemplateResponse(name='add-section-page.html', context=context)
 
 
 @app.post('/add-section/{zone_id}', response_class=HTMLResponse)
